@@ -193,5 +193,20 @@ def teardown_request(exception):
         db.close()
 
 
+@app.route('/home')
+def home(name=None): # what does name = None mean? 
+    #get user name from the database or google and send it to the HTML template
+    return render_template('home.html')
+
+@app.route('/addactivity', methods=['POST'])
+def addActivity():
+
+  return render_template('AddActivity.html')
+
+@app.route('/suggested', methods=['POST'])
+def suggested():
+  return render_template('suggested.html')
+
+
 if __name__ == "__main__":
     app.run()
