@@ -8,14 +8,15 @@
 		
 		<!-- external CSS link -->
 		<!--
-		<link rel="stylesheet" href="css/normalize.css">
-		<link rel="stylesheet" href="css/style.css">
-		-->
+		<link rel="stylesheet" href="css/normalize.css"> 		-->
+
+		<link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet">
+
 	</head>
 	<body>
 		<div id="container">
 		<!-- START HERE --> 
-
+			<img src="{{ url_for('static', filename='images/logo.png') }}" alt="getShitDoneLogo" style="width: 650px">
 			<h1>Productivity Redefined</h1>
 			<h2>you can always use a little help</h2>
 		
@@ -23,7 +24,7 @@
 			   Welcome to the Productivity Zone!
 			</p>
 
-				{{ authResult["userID"] }}
+    		<p> Welcome {{people_document['displayName']}} </p>
 
 			<p>Take your TO DO list and make a DONE list </p>
 
@@ -32,12 +33,9 @@
 			<form name="selectActivity" action="/addactivity" method="post">
 				<Select>
 					<option name="book"> Book </option>
-				<Select>
+				<Select> <br>
 				<input type="submit" value="Add Activity">
 			</form>
-
-
-
-
+		</div>
 	</body>
 </html>
