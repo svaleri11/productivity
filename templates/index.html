@@ -68,6 +68,7 @@
     <pre id="authResult"></pre>
   </div>
 </body>
+
 <script type="text/javascript">
 var helper = (function() {
   var authResult = undefined;
@@ -90,6 +91,7 @@ var helper = (function() {
         this.authResult = authResult;
         helper.connectServer();
         // After we load the Google+ API, render the profile data from Google+.
+        //window.location = "http://127.0.0.1:5000/home";
         gapi.client.load('plus','v1',this.renderProfile);
         //window.location = '{{ url_for('test') }}';
       } else if (authResult['error']) {
@@ -107,8 +109,7 @@ var helper = (function() {
      */
     renderProfile: function() {
       var request = gapi.client.plus.people.get( {'userId' : 'me'} );
-      request.execute( function(profile) {
-          $('#profile').empty();
+      request.execute( function(profile) { $('#profile').empty();
           if (profile.error) {
             $('#profile').append(profile.error);
             return;

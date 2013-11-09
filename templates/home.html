@@ -1,0 +1,43 @@
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="keywords" content="Productivity Scheduler">
+		<meta name="description" content="App to make you productive!">
+
+		<title>Productivity</title>
+		
+		<!-- external CSS link -->
+		<!--
+		<link rel="stylesheet" href="css/normalize.css">
+		<link rel="stylesheet" href="css/style.css">
+		-->
+	</head>
+	<body>
+		<div id="container">
+		<!-- START HERE --> 
+
+			<h1>Productivity Redefined</h1>
+			<h2>you can always use a little help</h2>
+		
+			<p>Hi {{ name }}!! <br>
+			   Welcome to the Productivity Zone!
+			</p>
+
+				{{ authResult["userID"] }}
+
+			<p>Take your TO DO list and make a DONE list </p>
+
+			<p>Add an activity to your calendar</p>
+
+			<form name="selectActivity" action="/addactivity" method="post">
+				<Select>
+					<option name="book"> Book </option>
+				<Select>
+				<input type="submit" value="Add Activity">
+			</form>
+
+
+
+
+	</body>
+</html>

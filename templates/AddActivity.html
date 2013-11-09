@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="keywords" content="Productivity Scheduler">
+		<meta name="description" content="App to make you productive!">
+
+		<title>Productivity</title>
+		
+		<!-- external CSS link -->
+		<!--
+		<link rel="stylesheet" href="css/normalize.css">
+		<link rel="stylesheet" href="css/style.css">
+		-->
+	</head>
+	<body>
+		<div id="container">
+		<!-- START HERE --> 
+
+			<h1>Productivity Redefined</h1>
+			<h2>you can always use a little help</h2>
+		
+			
+			<p>Take your TO DO list and make a DONE list </p>
+
+			<p>Add a book to your calendar</p>
+
+			<form name="LogInButton" action="/suggested" method="POST"> 
+				
+				What book would you like to read? <input type="text" name="bookTitle"> <br>
+				
+				How many pages is the book? <input type="text" name="bookLength"> <br>
+
+				When would you like to finish the book?
+
+				<select name="timePeriod">
+  					<option value="today">Today</option>
+ 					<option value="threeDays">3 Days</option>
+  					<option value="oneWeek">One Week</option>
+  					<option value="twoWeeks">TWo Weeks</option>
+  					<option value="oneMonth">One Month</option>
+				</select>
+				<br>
+				<input type="submit" value="Submit">
+			</form>
+ 
+		<!-- END HERE --> 
+		</div><!-- #container --> 
+	</body>
+</html>
