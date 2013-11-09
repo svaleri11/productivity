@@ -93,6 +93,7 @@ var helper = (function() {
         // After we load the Google+ API, render the profile data from Google+.
         //window.location = "http://127.0.0.1:5000/home";
         gapi.client.load('plus','v1',this.renderProfile);
+        //window.location = '{{ url_for('test') }}';
       } else if (authResult['error']) {
         // There was an error, which means the user is not signed in.
         // As an example, you can troubleshoot by writing to the console:
@@ -133,7 +134,7 @@ var helper = (function() {
       // Revoke the server tokens
       $.ajax({
         type: 'POST',
-        url: window.location.href + '/disconnect',
+        url: window.location.href + 'disconnect',
         async: false,
         success: function(result) {
           console.log('revoke response: ' + result);
@@ -159,7 +160,7 @@ var helper = (function() {
       console.log(this.authResult.code);
       $.ajax({
         type: 'POST',
-        url: window.location.href + '/connect?state={{ STATE }}',
+        url: window.location.href + 'connect?state={{ STATE }}',
         contentType: 'application/octet-stream; charset=utf-8',
         success: function(result) {
           console.log(result);
