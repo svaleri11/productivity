@@ -13,8 +13,6 @@ from flask import g, redirect, url_for, abort, render_template, flash
 import sqlite3
 
 import httplib2
-from oauth2client import client
-from apiclient import sample_tools
 from oauth2client.client import AccessTokenRefreshError
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
