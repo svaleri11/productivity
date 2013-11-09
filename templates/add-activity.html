@@ -25,7 +25,7 @@
 
 			<p>Add a book to your calendar</p>
 
-			<form name="LogInButton" action="/suggested" method="POST"> 
+			<form name="addActivity" action="{{ url_for('add_activity') }}" method="POST"> 
 				
 				What book would you like to read? <input type="text" name="bookTitle"> <br>
 				
@@ -37,7 +37,7 @@
   					<option value="today">Today</option>
  					<option value="threeDays">3 Days</option>
   					<option value="oneWeek">One Week</option>
-  					<option value="twoWeeks">TWo Weeks</option>
+  					<option value="twoWeeks">Two Weeks</option>
   					<option value="oneMonth">One Month</option>
 				</select>
 				<br>

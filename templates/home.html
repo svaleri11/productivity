@@ -23,18 +23,11 @@
 			   Welcome to the Productivity Zone!
 			</p>
 
-				{{ authResult["userID"] }}
-
 			<p>Take your TO DO list and make a DONE list </p>
 
 			<p>Add an activity to your calendar</p>
 
-			<form name="selectActivity" action="/addactivity" method="post">
-				<Select>
-					<option name="book"> Book </option>
-				<Select>
-				<input type="submit" value="Add Activity">
-			</form>
+			<a href="{{ url_for('add_activity_form') }}">Read A Book</a>
 
 
 
