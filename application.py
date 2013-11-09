@@ -16,13 +16,12 @@ from oauth2client.client import FlowExchangeError
 
 from simplekv.memory import DictStore
 from flaskext.kvsession import KVSessionExtension
-app = Flask(__name__)
-
 
 APPLICATION_NAME = 'Productive'
-
-
+PRODUCTIVE_SETTINGS = 'config.py'
 app = Flask(__name__)
+app.config.from_envvar(PRODUCTIVE_SETTINGS, silent=True)
+
 app.secret_key = ''.join(random.choice(string.ascii_uppercase + string.digits)
                          for x in xrange(32))
 
@@ -144,6 +143,12 @@ def disconnect():
         json.dumps('Failed to revoke token for given user.', 400))
     response.headers['Content-Type'] = 'application/json'
     return response
+
+
+def connect_db():
+    """Connect to the SQLite3 database"""
+    return sqlite3.connect(app.config['DATABASE'])
+
 
 if __name__ == "__main__":
     app.run()
