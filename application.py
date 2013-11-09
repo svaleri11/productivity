@@ -1,4 +1,4 @@
-import json
+import json, sys
 import random
 import string
 from apiclient.discovery import build
@@ -8,8 +8,13 @@ from flask import make_response
 from flask import render_template
 from flask import request
 from flask import session
+from flask import g, redirect, url_for, abort, render_template, flash
+
+import sqlite3
 
 import httplib2
+from oauth2client import client
+from apiclient import sample_tools
 from oauth2client.client import AccessTokenRefreshError
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
@@ -17,14 +22,14 @@ from oauth2client.client import FlowExchangeError
 from simplekv.memory import DictStore
 from flaskext.kvsession import KVSessionExtension
 
-APPLICATION_NAME = 'Productive'
-PRODUCTIVE_SETTINGS = 'config.py'
-app = Flask(__name__)
-app.config.from_envvar(PRODUCTIVE_SETTINGS, silent=True)
+from contextlib import closing
 
+
+app = Flask(__name__)
+app.config.from_object('config')
 app.secret_key = ''.join(random.choice(string.ascii_uppercase + string.digits)
                          for x in xrange(32))
-
+APPLICATION_NAME = 'Productive'
 
 # See the simplekv documentation for details
 store = DictStore()
@@ -49,6 +54,7 @@ def index():
   state = ''.join(random.choice(string.ascii_uppercase + string.digits)
                   for x in xrange(32))
   session['state'] = state
+
   # Set the Client ID, Token State, and Application Name in the HTML while
   # serving it.
   response = make_response(
@@ -57,6 +63,7 @@ def index():
                       STATE=state,
                       APPLICATION_NAME=APPLICATION_NAME))
   response.headers['Content-Type'] = 'text/html'
+
   return response
 
 
@@ -106,21 +113,41 @@ def connect():
                              200)
     response.headers['Content-Type'] = 'application/json'
     return response
+
+  if (credentials is not None):
+    http = httplib2.Http()
+    http = credentials.authorize(http)
+    service2 = build('plus', 'v1', http=http)
+    people_resource = service2.people()
+    people_document = people_resource.get(userId='me').execute()
+    print "name: " + people_document['displayName']
+ 
+
   # Store the access token in the session for later use.
   session['credentials'] = credentials
   session['gplus_id'] = gplus_id
+  session['user_id'] = 1
   response = make_response(json.dumps('Successfully connected user.', 200))
   response.headers['Content-Type'] = 'application/json'
   return response
 
+def authenticate():
+  # Only disconnect a connected user.
+  credentials = session.get('credentials')
+  user_id = session.get('user_id')
+  if credentials is None or user_id is None:
+    response = make_response(json.dumps('Current user not connected.'), 401)
+    response.headers['Content-Type'] = 'application/json'
+    return response
 
 @app.route('/disconnect', methods=['POST'])
 def disconnect():
   """Revoke current user's token and reset their session."""
-
   # Only disconnect a connected user.
+  user_id = session.get('user_id')
   credentials = session.get('credentials')
-  if credentials is None:
+  if credentials is None or user_id is None:
+    print "no cred or user id"
     response = make_response(json.dumps('Current user not connected.'), 401)
     response.headers['Content-Type'] = 'application/json'
     return response
@@ -134,6 +161,7 @@ def disconnect():
   if result['status'] == '200':
     # Reset the user's session.
     del session['credentials']
+    del session['user_id']
     response = make_response(json.dumps('Successfully disconnected.'), 200)
     response.headers['Content-Type'] = 'application/json'
     return response
@@ -144,10 +172,27 @@ def disconnect():
     response.headers['Content-Type'] = 'application/json'
     return response
 
-
 def connect_db():
     """Connect to the SQLite3 database"""
     return sqlite3.connect(app.config['DATABASE'])
+
+def init_db():
+    with closing(connect_db()) as db:
+        with app.open_resource('schema.sql', mode='r') as f:
+            db.cursor().executescript(f.read())
+        db.commit()
+
+#DB functions before request
+@app.before_request
+def before_request():
+    g.db = connect_db()
+
+#DB functions after request
+@app.teardown_request
+def teardown_request(exception):
+    db = getattr(g, 'db', None)
+    if db is not None:
+        db.close()
 
 
 if __name__ == "__main__":
